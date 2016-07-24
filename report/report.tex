@@ -1,0 +1,47 @@
+%!TEX options = --shell-escape
+\documentclass{report}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage{geometry}	            		% See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   		% ... or a4paper or a5paper or ... 			% Use pdf, png, jpg, or eps§ with 
+\usepackage{amssymb}
+\usepackage{bondgraphs}
+\usepackage{multicol}
+
+
+\begin{document}
+\begin{multicols}{2}
+[
+Insert the Abstract here
+]
+
+\tikzstyle{block}=[minimum width=7mm,minimum height=7mm,draw,thick]
+\tikzstyle{signal} = [-latex, color=red!30!black]
+\begin{tikzpicture}
+   \node[bgelement, label=north:$mmf_i$$_n$] (Se) at (0,0) {SE};
+   \node[bgelement] (one) at (2,0) {1};
+   \node[bgelement, label=right:$\frac{1}{k}$] (C) at (4,0) {C};
+   \node[bgelement,label=north:$m_2$] (I) at (2,2) {I};
+   \node[bgelement] (oneright) at (-3, 0) {1};
+   \node[bgelement, above=1 of oneright, label=north:$m_1$] (Im1) {I};
+   \node[bgelement, left=1 of oneright, label=south:R] (TF) {TF};
+   \node[bgelement, left=1 of TF] (oneleft) {1};
+   \node[bgelement, above=1 of oneleft, label=north:J] (IJ) {I};
+   \node[bgelement, left=1 of oneleft, label=south:$T_i$$_n$] (SEin) {SE};
+   \node[block,below=1 of TF] (int) {$\int$};
+   \node[block,right=1 of int] (ddt) {$\theta$};
+   \draw[bond,f_in] (Se) -- (one);
+   \draw[bond, f_in] (one) -- (I);
+   \draw[bond, f_out] (one) -- (C);
+   \draw[bond, f_out={error}] (oneright) -- (Im1);
+   \draw[bond, f_out] (TF) -- (oneright);
+   \draw[bond, f_out] (oneleft) -- (TF);
+   \draw[bond, f_in] (oneleft) -- (IJ);
+   \draw[bond, f_in] (SEin) -- (oneleft);
+   \begin{scope}[every path/.style={signal}]
+   		\draw (oneleft) -- node[pos=0.5,right]{$w$} (int);
+   		\draw (int) -- (ddt);
+   		\draw (ddt) -- (Se);
+   	\end{scope}
+ \end{tikzpicture}
+
+\end{multicols}
+\end{document}  
