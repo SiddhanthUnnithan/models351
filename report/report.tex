@@ -33,7 +33,6 @@ The prototype was constructed as a wooden body with metal and acrylic supports. 
 A point to note about the physical prototype is that the human operated power source applied to the wheel was a quick adjustment made for demo-day. By manually giving the wheel an angular velocity, it is a source of flow that is applied, not a source of effort. However, a source of effort is required to avoid derivative causalities in the bond graph model. The preferable prototype implementation would have used a torsional spring or elastic band to wind up the wheel and give it torque, which would have been consistent with the bond graph.
 
 There were also problems encountered in applying the theoretical system into practice. For one, the friction was too great along the rails, causing the crankshaft arm and cart to slide unsmoothly. Friction could have been reduced by using ball bearings to slide against the rails instead of simple holes and lubricant. Next, the springs were too stiff, limiting the cart’s rebound motion. A spring with a lesser k value could compress further and exert a greater rebound force on the cart. Thirdly, the strength of the magnets was too small to push the cart into the springs with enough force. Like decreasing the spring’s stiffness, a greater repelling force applied to the cart could also have created a preferred rebound motion. These problems together limited the cart from oscillating along the rail as desired.
-
 % Initial bondgraph
 \begin{figure*}
    \centering
@@ -43,7 +42,7 @@ There were also problems encountered in applying the theoretical system into pra
       \node[bgelement, label=north:$mmf_i$$_n$] (Se) at (0,0) {SE};
       \node[bgelement] (one) at (2,0) {1};
       \node[bgelement, label=right:$\frac{1}{k}$] (C) at (4,0) {C};
-      \node[bgelement,label=north:$m_2$] (I) at (2,2) {I};
+      \node[bgelement, above=1 of one, label=north:$m_2$] (I) {I};
       \node[bgelement] (oneright) at (-3, 0) {1};
       \node[bgelement, above=1 of oneright, label=north:$m_1$] (Im1) {I};
       \node[bgelement, left=1 of oneright, label=south:R] (TF) {TF};
@@ -66,7 +65,36 @@ There were also problems encountered in applying the theoretical system into pra
       		\draw (ddt) -- (Se);
       	\end{scope}
     \end{tikzpicture}
-    \caption{Bondgraph of initial system}
+    \caption{Bondgraph modelling magnetomotive force as SE}
+\end{figure*}
+% Initial bondgraph
+\begin{figure*}
+   \centering
+   \tikzstyle{block}=[minimum width=7mm,minimum height=7mm,draw,thick]
+   \begin{tikzpicture}
+      \node[bgelement] (0bond) at (0,0) {0};
+      \node[bgelement] (one) at (2,0) {1};
+      \node[bgelement, label=right:$\frac{1}{k}$] (C) at (4,0) {C};
+      \node[bgelement, above=1 of one, label=north:$m_2$] (I) {I};
+      \node[bgelement] (oneright) at (-2, 0) {1};
+      \node[bgelement, above=1 of oneright, label=north:$m_1$] (Im1) {I};
+      \node[bgelement, left=1 of oneright, label=south:R] (TF) {TF};
+      \node[bgelement, left=1 of TF] (oneleft) {1};
+      \node[bgelement, above=1 of oneleft, label=north:J] (IJ) {I};
+      \node[bgelement, left=1 of oneleft, label=south:$T_i$$_n$] (SEin) {SE};
+      \node[bgelement, above=1 of 0bond, label=north:$\frac{1}{k_2}$] (C2) {C};
+      \draw[bond,f_in] (0bond) -- (one);
+      \draw[bond, f_in] (one) -- (I);
+      \draw[bond, f_out] (one) -- (C);
+      \draw[bond, f_out={error}] (oneright) -- (Im1);
+      \draw[bond, f_out] (TF) -- (oneright);
+      \draw[bond, f_out] (oneleft) -- (TF);
+      \draw[bond, f_in] (oneleft) -- (IJ);
+      \draw[bond, f_in] (SEin) -- (oneleft);
+      \draw[bond, f_out] (oneright) -- (0bond);
+      \draw[bond, f_out] (0bond) -- (C2);
+    \end{tikzpicture}
+    \caption{Revised Bondgraph}
 \end{figure*}
 
 \end{multicols}
