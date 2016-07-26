@@ -1,5 +1,5 @@
 %!TEX options = --shell-escape
-\documentclass[notitlepage,11pt]{report}
+\documentclass[notitlepage,10pt]{report}
 \usepackage[left=1in, right=1in, top=1in, bottom=1in]{geometry}
 \usepackage{amssymb}
 \usepackage{bondgraphs}
@@ -42,16 +42,16 @@ There were also problems encountered in applying the theoretical system into pra
       \node[bgelement, label=north:$mmf_i$$_n$] (Se) at (0,0) {SE};
       \node[bgelement] (one) at (2,0) {1};
       \node[bgelement, label=right:$\frac{1}{k}$] (C) at (4,0) {C};
-      \node[bgelement, above=1 of one, label=north:$m_2$] (I) {I};
+      \node[bgelement, above=1 of one, label=north:$m_m$$_2$] (I) {I};
       \node[bgelement] (oneright) at (-3, 0) {1};
-      \node[bgelement, above=1 of oneright, label=north:$m_1$] (Im1) {I};
+      \node[bgelement, above=1 of oneright, label=north:$m_m$$_1$] (Im1) {I};
       \node[bgelement, left=1 of oneright, label=south:R] (TF) {TF};
       \node[bgelement, left=1 of TF] (oneleft) {1};
       \node[bgelement, above=1 of oneleft, label=north:J] (IJ) {I};
       \node[bgelement, left=1 of oneleft, label=south:$T_i$$_n$] (SEin) {SE};
       \node[block,below=1 of TF] (int) {$\int$};
       \node[block,right=1 of int] (ddt) {$\theta$};
-      \draw[bond,f_in] (Se) -- (one);
+      \draw[bond,f_in] (Se) -- node[pos=0.5,above]{$w$} (one);
       \draw[bond, f_in] (one) -- (I);
       \draw[bond, f_out] (one) -- (C);
       \draw[bond, f_out={error}] (oneright) -- (Im1);
@@ -60,14 +60,37 @@ There were also problems encountered in applying the theoretical system into pra
       \draw[bond, f_in] (oneleft) -- (IJ);
       \draw[bond, f_in] (SEin) -- (oneleft);
       \begin{scope}[every path/.style={signal}]
-      		\draw (oneleft) -- node[pos=0.5,right]{$w$} (int);
-      		\draw (int) -- (ddt);
-      		\draw (ddt) -- (Se);
-      	\end{scope}
+            \draw (oneleft) -- node[pos=0.5,right]{$w$} (int);
+            \draw (int) -- (ddt);
+            \draw (ddt) -- (Se);
+         \end{scope}
     \end{tikzpicture}
     \caption{Bondgraph modelling magnetomotive force as SE}
 \end{figure*}
-% Initial bondgraph
+
+The bond graph model consists of two subsystems, the first of which is the inertial wheel. A source of torque is provided to a 1 junction, into the rotational inertia of the wheel, and into a transformer (TF) element. The rotational motion is converted to linear motion here. The TF element flows into another 1 junction, and thus into the inertial element representing the mass of the first magnet. As a source of effort creates mandatory causality at the first 1 junction, the first magnet mass is in derivative causality. The second subsystem is the cart and spring. The source of effort, or magnetomotive force, of this subsystem is a function of the distance between the magnet on the crankshaft arm and the cart mass, which in turn (no pun intended) is a function of the angular displacement of the inertial wheel. This source of effort flows through a 1 junction into an I element, the cart mass, and C element, the spring. The second subsystem contains all integral causalities, as desired. 
+
+The major measured parameters were the radius of the wheel, the masses of the cart, wheel and magnets, and the length of the crankshaft arm. The spring constant was derived to be roughly 89.1 N/m by attaching a one-pound weight to the springs and measuring the vertical displacement. The magnetomotive force was calculated using the following equation: 
+\begin{equation}
+   F=\bigg[\frac{B_0^2A^2(L^2+R^2)}{\pi\mu_0L^2}\bigg]\bigg[\frac{1}{x^2} + \frac{1}{(x+2L)^2} - \frac{2}{(x+L)^2}\bigg]
+\end{equation}
+
+The bar magnets were idealized as cylindrical in order to simplify the calculation, with a radius equal to half their width and the measured length. As noted before, this magnetomotive force is calculated using the separation of the two magnets, which is dependent on the position of the crankshaft and the moving cart. 
+
+As the bondgraph in Figure 1 presents two systems of interest, there exists two sets of state variables for modelling. The first system consists of an angular momentum (Pj) resulting from the inertial mass of the wheel. Within the second system, there exists momentum (Pm2) and displacement (qspring) variables related to the cart mass and spring, respectively. The final state variable is an unconventional one and is reasoned through the physical relationship between the two systems. When observing the first system, one can accurately measure the angle (theta) between the crankshaft arm and the horizontal, symmetric center of the wheel. As stated earlier, the magnetomotive repelling force is a function of the measured angle, thus allowing the model to treat the angle as a state variable. The derived state equations for the model are listed below:
+\begin{equation}
+   \frac{dp_2}{dt} = \frac{T_{in}}{1 + \frac{R^2}{J}m_{m_{1}}}
+\end{equation}
+\begin{equation}
+   \frac{dp_9}{dt} = \frac{mmF(x) - \frac{1}{k}q_8}{1 + \frac{m_{m_{2}}}{m}}
+\end{equation}
+\begin{equation}
+   \frac{dq_8}{dt} = \frac{1}{m}p_7
+\end{equation}
+\begin{equation}
+   \frac{d\theta}{dt} = \frac{1}{J}p_2
+\end{equation}
+% Second bondgraph
 \begin{figure*}
    \centering
    \tikzstyle{block}=[minimum width=7mm,minimum height=7mm,draw,thick]
